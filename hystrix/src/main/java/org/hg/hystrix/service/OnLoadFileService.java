@@ -1,5 +1,6 @@
 package org.hg.hystrix.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +33,7 @@ public class OnLoadFileService {
     @Autowired
     RestTemplate restTemplate;
 
+    @HystrixCommand(fallbackMethod = "error")
     public boolean batchImport(String fileName, MultipartFile file, String fileType) throws Exception{
         boolean notNull = false;
         System.out.println("Service内的文件名："+fileName);
@@ -132,5 +134,10 @@ public class OnLoadFileService {
         }
 
         return notNull;
+    }
+
+    public boolean error(String fileName, MultipartFile file, String fileType){
+        System.out.println("方法降级");
+        return false;
     }
 }

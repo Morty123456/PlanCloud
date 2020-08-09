@@ -1,5 +1,6 @@
 package org.hg.hystrix.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,12 @@ public class GetRobotNumService {
     @Autowired
     RestTemplate restTemplate;
 
+    /*
+     * 发起的远程调用可能会失败
+     * 在方法上添加 @HystrixCommand 注解，配置 fallbackMethod 属性
+     * 这个属性表示该方法调用失败时的替代方法
+     */
+    @HystrixCommand(fallbackMethod = "error")
     public List<List<Double>> getRobotNum(String numType){
         List<List<Double>> robotnum = new LinkedList<>();
         String[] axisMore = {"S","L","U","R","B","T"};
@@ -37,6 +44,12 @@ public class GetRobotNumService {
                 robotnum.add(Arrays.asList(newNum));
             }
         }
+        return robotnum;
+    }
+
+    public List<List<Double>> error(String numType){
+        List<List<Double>> robotnum = new LinkedList<>();
+        System.out.println("方法降级");
         return robotnum;
     }
 }

@@ -24,7 +24,7 @@ public class MyFilter implements Filter {
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper(httpResponse);
 
         String url = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
-        System.out.println(url);
+//        System.out.println(url);
         Object user = httpRequest.getSession().getAttribute("username");
         if (url.startsWith("/static") || url.equals("/index") || url.startsWith("/login")) {
             //在白名单中的url,放行访问
