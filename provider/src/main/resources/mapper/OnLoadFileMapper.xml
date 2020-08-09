@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hg.provider.mapper.OnLoadFileMapper">
+    <insert id="addSixAxis">
+        insert into ${fileType} (S, L, U, R, B, T) values
+        (#{sixAxis.S}, #{sixAxis.L}, #{sixAxis.U}, #{sixAxis.R}, #{sixAxis.B}, #{sixAxis.T});
+    </insert>
+    <insert id="addThreeAxis">
+        insert into ${fileType} (R, B, T) values
+        (#{sixAxis.R}, #{sixAxis.B}, #{sixAxis.T});
+    </insert>
+</mapper>

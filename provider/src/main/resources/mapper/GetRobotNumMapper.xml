@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--要注意namespace的路径-->
+<mapper namespace="org.hg.provider.mapper.GetRobotNumMapper">
+    <!-- id 要和上一个路径中的 mapper 的方法一样， resultType是返回值的类型 -->
+    <select id="getRobotNum" resultType="double">
+        select ${axis} from (
+            select id, ${axis} from ${numType} order by id desc limit 10
+        )
+        aa order by id
+    </select>
+</mapper>

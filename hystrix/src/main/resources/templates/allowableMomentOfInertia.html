@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>状态监测-容许惯性力矩</title>
+		<meta name="description" content="Restyling jQuery UI Widgets and Elements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="../static/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../static/css/font-awesome.css" type="text/css" />
+		<link rel="stylesheet" href="../static/css/ace-fonts.css" />
+		<link rel="stylesheet" href="../static/css/ace.min.css" id="main-ace-style" />
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="../static/css/ace-part2.min.css" />
+		<![endif]-->
+
+		<![endif]-->
+		<script src="../static/js/ace-extra.min.js"></script>
+
+
+		<script src="../static/js/jquery-3.1.0.min.js"></script>
+		<!--引入echarts.js-->
+		<script src="../static/js/echarts.js"></script>
+		<!--读取数据库，显示echarts的文件-->
+		<script src="../static/actionJs/getAllowableMomentOfInertia.js"></script>
+		<script src="../static/actionJs/logout.js"></script>
+
+
+		<!--[if lte IE 8]>
+		<script src="../static/js/html5shiv.min.js"></script>
+		<script src="../static/js/respond.min.js"></script>
+
+
+		<![endif]-->
+		<style type="text/css">
+			.CSSearchTbl{ border:1px #008CD4 solid;}
+			.CSSearchTbl thead{}
+			.CSSearchTbl thead tr{}
+			.CSSearchTbl thead tr th{  text-align:left; padding-left:10px;}
+			.CSSearchTbl tbody{}
+			.CSSearchTbl tbody tr{}
+			.CSSearchTbl tbody tr td{  padding: 10px;}
+			.CSSearchTbl tbody tr td.right{ text-align: left;}
+			.CSSearchTbl tbody tr td.left{ text-align: right;}
+			.table-responsive{ display: none;}
+		</style>
+	</head>
+
+	<!--使用onload加载js函数-->
+	<body class="no-skin" onload="getAllowableMomentOfInertia()">
+		<!-- #section:basics/navbar.layout -->
+		<div id="navbar" class="navbar navbar-default">
+
+			<div class="navbar-container" id="navbar-container">
+				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler">
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+
+					<span class="icon-bar"></span>
+				</button>
+
+				<div class="navbar-header pull-left">
+					<!-- #section:basics/navbar.layout.brand -->
+					<a href="index.html" class="navbar-brand">
+						<small>
+							<img src="../static/avatars/logo.png" alt="" />
+						</small>
+					</a>
+				</div>
+
+				<!-- #section:basics/navbar.dropdown -->
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+
+
+						<!-- #section:basics/navbar.user_menu -->
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="../static/avatars/user.jpg" alt="Jason's Photo" />
+								<span class="user-info">
+									欢迎您<br />
+									mcg
+								</span>
+
+								<i class="ace-icon fa fa-caret-down"></i>
+							</a>
+
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a href="#">
+										<i class="ace-icon fa fa-cog"></i>
+										系统设置
+									</a>
+								</li>
+
+								<li>
+									<a href="profile.html">
+										<i class="ace-icon fa fa-user"></i>
+										个人信息设置
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
+								<li>
+									<a href="#">
+										<i id="logout" type="button" class="ace-icon fa fa-power-off">登出</i>
+										<!--<i id="logout" class="ace-icon fa fa-power-off"></i>-->
+										<!--登出-->
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<!-- /section:basics/navbar.user_menu -->
+					</ul>
+				</div>
+
+				<!-- /section:basics/navbar.dropdown -->
+			</div><!-- /.navbar-container -->
+		</div>
+
+		<div class="main-container" id="main-container">
+
+			<div id="sidebar" class="sidebar responsive">
+				<ul class="nav nav-list">
+					<li class="">
+						<a href="index.html">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text"> 总控制台 </span>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="rangeOfMotion.html">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text"> 运动位置 </span>
+							<!--<span class="menu-text" id="getPlan" type="button"> 今日任务 </span>-->
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="maximumSpeed.html">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 运动速度 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="allowableTorque.html">
+							<i class="menu-icon fa fa-pencil-square-o"></i>
+							<span class="menu-text"> 容许力矩 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="active open">
+						<a href="allowableMomentOfInertia.html">
+							<i class="menu-icon fa fa-pencil-square-o"></i>
+							<span class="menu-text"> 容许惯性力矩 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li class="">
+						<a href="onLoadFile.html">
+							<i class="menu-icon fa fa-file-o"></i>
+							<span class="menu-text"> 文件上传 </span>
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+						<b class="arrow"></b>
+					</li>
+
+				</ul><!-- /.nav-list -->
+
+
+				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+				</div>
+
+			</div>
+
+
+			<!-- /section:basics/sidebar -->
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="ace-icon fa fa-home home-icon"></i>
+							<a href="index.html">状态监测首页</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">容许惯性力矩</a>
+						</li>
+
+					</ul><!-- /.breadcrumb -->
+
+					<!-- #section:basics/content.searchbox -->
+					<div class="nav-search" id="nav-search">
+						<form class="form-search">
+							<span class="input-icon">
+								<input type="text" placeholder="请输入关键字 ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+							</span>
+						</form>
+					</div><!-- /.nav-search -->
+				</div>
+
+				<div class="row">
+					<div class="col-md-5">
+						<div id="R" style="width: 120%;height:250%;" ></div>
+					</div>
+					<div class="col-md-5">
+						<div id="B" style="width: 120%;height:250%;" ></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						<div id="T" style="width: 120%;height:250%;" ></div>
+					</div>
+				</div>
+				<script type="text/javascript">
+                    // 基于准备好的dom，初始化echarts实例
+                    // var myChart = echarts.init(document.getElementById('main'));
+                    var myChart_R = echarts.init(document.getElementById('R'));
+                    var myChart_B = echarts.init(document.getElementById('B'));
+                    var myChart_T = echarts.init(document.getElementById('T'));
+                    // 指定图表的配置项和数据
+                    var option_R = {
+                        color:['#3398DB'],
+                        title: {
+                            text: 'R轴容许惯性力矩'
+                        },
+                        tooltip: {
+                            trigger:'axis',
+                            formatter:function (params) {
+                                if (Math.abs(params[0].data-params[1].data)<=params[1].data*0.1)
+                                    return "正常<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else if (params[0].data<params[1].data)
+                                    return "不正常<br>惯性力矩比标准值低 "+(params[1].data-params[0].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else
+                                    return "不正常<br>惯性力矩比标准值高 "+(params[0].data-params[1].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                            }
+						},
+                        legend: {
+                            data:['惯性力矩','标准惯性力矩']
+                        },
+                        xAxis: {
+                            data: []
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '惯性力矩',
+                            type: 'line',
+                            data: [],
+							markLine:{
+                                symbol:'none',
+                                label:{
+                                    position:'end',
+									formatter:"超标"
+                                },
+                                data: [{
+                                    //配置线端起始点
+                                    silent:false,
+                                    lineStyle:{
+                                        type:"solid",
+                                        color:"#FA3934",
+                                    },
+                                    yAxis: 0.5
+                                }
+                                ]
+							}
+                        },{
+                            name: '标准惯性力矩',
+                            type: "line",
+                            color: '#00EE00',
+                            data: [0,0.1,0.18,0.32,0.48,0.49,0.48,0.22,0.1,0]
+                        }],
+                    };
+                    var option_B = {
+                        color:['#3398DB'],
+                        title: {
+                            text: 'B轴容许惯性力矩'
+                        },
+                        tooltip: {
+                            trigger:'axis',
+                            formatter:function (params) {
+                                if (Math.abs(params[0].data-params[1].data)<=params[1].data*0.1)
+                                    return "正常<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else if (params[0].data<params[1].data)
+                                    return "不正常<br>惯性力矩比标准值低 "+(params[1].data-params[0].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else
+                                    return "不正常<br>惯性力矩比标准值高 "+(params[0].data-params[1].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                            }
+						},
+                        legend: {
+                            data:['惯性力矩','标准惯性力矩']
+                        },
+                        xAxis: {
+                            data: []
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '惯性力矩',
+                            type: 'line',
+                            data: [],
+                            markLine:{
+                                symbol:'none',
+                                label:{
+                                    position:'end',
+                                    formatter:"超标"
+                                },
+                                data: [{
+                                    //配置线端起始点
+                                    silent:false,
+                                    lineStyle:{
+                                        type:"solid",
+                                        color:"#FA3934",
+                                    },
+                                    yAxis: 0.5
+                                }
+                                ]
+                            }
+                        },{
+                            name: '标准惯性力矩',
+                            type: "line",
+                            color: '#00EE00',
+                            data: [0,0.1,0.18,0.34,0.46,0.48,0.47,0.25,0.12,0]
+                        }],
+                    };
+                    var option_T = {
+                        color:['#3398DB'],
+                        title: {
+                            text: 'T轴容许惯性力矩'
+                        },
+                        tooltip: {
+                            trigger:'axis',
+                            formatter:function (params) {
+                                if (Math.abs(params[0].data-params[1].data)<=params[1].data*0.1)
+                                    return "正常<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else if (params[0].data<params[1].data)
+                                    return "不正常<br>惯性力矩比标准值低 "+(params[1].data-params[0].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                                else
+                                    return "不正常<br>惯性力矩比标准值高 "+(params[0].data-params[1].data)+"<br>标准值为 "+params[1].data+"<br>此点运行值为 "+params[0].data;
+                            }
+						},
+                        legend: {
+                            data:['惯性力矩','标准惯性力矩']
+                        },
+                        xAxis: {
+                            data: []
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '惯性力矩',
+                            type: 'line',
+                            data: [],
+                            markLine:{
+                                symbol:'none',
+                                label:{
+                                    position:'end',
+                                    formatter:"超标"
+                                },
+                                data: [{
+                                    //配置线端起始点
+                                    silent:false,
+                                    lineStyle:{
+                                        type:"solid",
+                                        color:"#FA3934",
+                                    },
+                                    yAxis: 0.2
+                                }
+                                ]
+                            }
+                        },{
+                            name: '标准惯性力矩',
+                            type: "line",
+                            color: '#00EE00',
+                            data: [0,0.06,0.13,0.17,0.19,0.18,0.17,0.08,0.12,0]
+                        }],
+                    };
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    // myChart.setOption(option);
+				</script>
+			</div><!-- /.main-content -->
+
+			<div class="footer">
+				<div class="footer-inner">
+					<!-- #section:basics/footer -->
+					<div class="footer-content">
+						<!--<span class="bigger-120">-->
+							 <!--统一开发平台-UI库 &copy; 2014  更多模板：<a href="http://www.mycodes.net/" target="_blank">源码之家</a>-->
+						<!--</span>-->
+					</div>
+
+					<!-- /section:basics/footer -->
+				</div>
+			</div>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='../static/js/jquery.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='assets/js/jquery1x.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='../static/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="../static/js/bootstrap.min.js"></script>
+
+		<script src="../static/js/jquery.dataTables.min.js"></script>
+		<script src="../static/js/jquery.dataTables.bootstrap.js"></script>
+
+		<!-- ace scripts -->
+		<script src="../static/js/ace-elements.min.js"></script>
+		<script src="../static/js/ace.min.js"></script>
+
+		<script type="text/javascript">
+			jQuery(function($) {
+
+				$(".tbl-search").click(function(){
+					$(".table-responsive").slideDown("fast");
+				})
+
+				var oTable1 = 
+				$('#sample-table-2')
+				.dataTable( {
+					bAutoWidth: false,
+					bInfo:flase,
+					"aoColumns": [
+					  { "bSortable": false },
+					  null, 
+					  null,
+					  null,
+					  null, 
+					  null,
+					  { "bSortable": false },
+					  null,
+					  { "bSortable": false }
+					],
+					"aaSorting": [],
+			    } );
+			
+				$(document).on('click', 'th input:checkbox' , function(){
+					var that = this;
+					$(this).closest('table').find('tr > td:first-child input:checkbox')
+					.each(function(){
+						this.checked = that.checked;
+						$(this).closest('tr').toggleClass('selected');
+					});
+				});
+			})
+
+		</script>
+	</body>
+</html>
