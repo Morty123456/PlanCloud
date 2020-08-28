@@ -20,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 /**
  * @author: wzh
@@ -58,33 +61,46 @@ public class OnLoadFileService {
 
         if (fileType.equals("maximumSpeed") || fileType.equals("rangeOfMotion")){
 //            System.out.println("上传六个轴的数据……");
-            SixAxis sixAxis;
+//            SixAxis sixAxis;
             List<SixAxis> sixAxisList = new ArrayList<>();
-            for (int r=1;r<=sheet.getLastRowNum();r++){
-                sixAxis = new SixAxis();
-                Row row = sheet.getRow(r);
-                if (row==null)
-                    continue;
-                row.getCell(1).setCellType(CellType.STRING);
-                String num_S = row.getCell(1).getStringCellValue();
-                row.getCell(2).setCellType(CellType.STRING);
-                String num_L = row.getCell(2).getStringCellValue();
-                row.getCell(3).setCellType(CellType.STRING);
-                String num_U = row.getCell(3).getStringCellValue();
-                row.getCell(4).setCellType(CellType.STRING);
-                String num_R = row.getCell(4).getStringCellValue();
-                row.getCell(5).setCellType(CellType.STRING);
-                String num_B = row.getCell(5).getStringCellValue();
-                row.getCell(6).setCellType(CellType.STRING);
-                String num_T = row.getCell(6).getStringCellValue();
-                sixAxis.setS(Double.valueOf(num_S));
-                sixAxis.setL(Double.valueOf(num_L));
-                sixAxis.setU(Double.valueOf(num_U));
-                sixAxis.setR(Double.valueOf(num_R));
-                sixAxis.setB(Double.valueOf(num_B));
-                sixAxis.setT(Double.valueOf(num_T));
-                sixAxisList.add(sixAxis);
+            //得到所有的行数
+            int sumRow = sheet.getLastRowNum();
+            for (int i=1;i<sumRow/10+1;i++){
+                FutureTask<List<SixAxis>> futureTask =  new FutureTask<List<SixAxis>>(new POIExcelSix(sheet, i, i+1));
+                new Thread(futureTask).start();
+                List<SixAxis> listOneThread = futureTask.get();
+//                System.out.println("这是第 "+i+" 个线程："+Thread.currentThread().getName());
+//                for (SixAxis sixAxis : listOneThread){
+//                    sixAxisList.add(sixAxis);
+//                }
+
             }
+
+//            for (int r=1;r<=sheet.getLastRowNum();r++){
+//                sixAxis = new SixAxis();
+//                Row row = sheet.getRow(r);
+//                if (row==null)
+//                    continue;
+//                row.getCell(1).setCellType(CellType.STRING);
+//                String num_S = row.getCell(1).getStringCellValue();
+//                row.getCell(2).setCellType(CellType.STRING);
+//                String num_L = row.getCell(2).getStringCellValue();
+//                row.getCell(3).setCellType(CellType.STRING);
+//                String num_U = row.getCell(3).getStringCellValue();
+//                row.getCell(4).setCellType(CellType.STRING);
+//                String num_R = row.getCell(4).getStringCellValue();
+//                row.getCell(5).setCellType(CellType.STRING);
+//                String num_B = row.getCell(5).getStringCellValue();
+//                row.getCell(6).setCellType(CellType.STRING);
+//                String num_T = row.getCell(6).getStringCellValue();
+//                sixAxis.setS(Double.valueOf(num_S));
+//                sixAxis.setL(Double.valueOf(num_L));
+//                sixAxis.setU(Double.valueOf(num_U));
+//                sixAxis.setR(Double.valueOf(num_R));
+//                sixAxis.setB(Double.valueOf(num_B));
+//                sixAxis.setT(Double.valueOf(num_T));
+//                sixAxisList.add(sixAxis);
+//            }
             System.out.println("开始存入数据库……");
             for (SixAxis numOfAxis : sixAxisList){
                 //postForObject 不能传递多个参数，所以使用 map 来保存一下。
@@ -140,4 +156,49 @@ public class OnLoadFileService {
         System.out.println("方法降级");
         return false;
     }
+
+    //多线程解析excel表,六轴的机械臂
+    public static class POIExcelSix implements Callable<List<SixAxis>>{
+        Sheet sheet;
+        int begin;
+        int end;
+
+        public POIExcelSix(Sheet sheet, int begin, int end) {
+            this.sheet = sheet;
+            this.begin = begin;
+            this.end = end;
+        }
+
+        @Override
+        public List<SixAxis> call() throws Exception {
+            List<SixAxis> list = new LinkedList<>();
+            for (int i=begin*10+1;i<=end*10;i++){
+                SixAxis sixAxis = new SixAxis();
+                Row row = sheet.getRow(i);
+                if (row==null)
+                    continue;
+                row.getCell(1).setCellType(CellType.STRING);
+                String num_S = row.getCell(1).getStringCellValue();
+                row.getCell(2).setCellType(CellType.STRING);
+                String num_L = row.getCell(2).getStringCellValue();
+                row.getCell(3).setCellType(CellType.STRING);
+                String num_U = row.getCell(3).getStringCellValue();
+                row.getCell(4).setCellType(CellType.STRING);
+                String num_R = row.getCell(4).getStringCellValue();
+                row.getCell(5).setCellType(CellType.STRING);
+                String num_B = row.getCell(5).getStringCellValue();
+                row.getCell(6).setCellType(CellType.STRING);
+                String num_T = row.getCell(6).getStringCellValue();
+                sixAxis.setS(Double.valueOf(num_S));
+                sixAxis.setL(Double.valueOf(num_L));
+                sixAxis.setU(Double.valueOf(num_U));
+                sixAxis.setR(Double.valueOf(num_R));
+                sixAxis.setB(Double.valueOf(num_B));
+                sixAxis.setT(Double.valueOf(num_T));
+                list.add(sixAxis);
+            }
+            return list;
+        }
+    }
+
 }
