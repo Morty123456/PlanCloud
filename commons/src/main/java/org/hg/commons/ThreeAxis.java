@@ -2,9 +2,9 @@ package org.hg.commons;
 
 public class ThreeAxis {
     private int id;
-    private double R;
-    private double B;
-    private double T;
+    private double r;
+    private double b;
+    private double t;
 
     public int getId() {
         return id;
@@ -15,36 +15,36 @@ public class ThreeAxis {
     }
 
     public double getR() {
-        return R;
+        return r;
     }
 
     public void setR(double r) {
-        R = r;
+        this.r = r;
     }
 
     public double getB() {
-        return B;
+        return b;
     }
 
     public void setB(double b) {
-        B = b;
+        this.b = b;
     }
 
     public double getT() {
-        return T;
+        return t;
     }
 
     public void setT(double t) {
-        T = t;
+        this.t = t;
     }
 
     @Override
     public String toString() {
         return "ThreeAxis{" +
                 "id=" + id +
-                ", R=" + R +
-                ", B=" + B +
-                ", T=" + T +
+                ", r=" + r +
+                ", b=" + b +
+                ", t=" + t +
                 '}';
     }
 }

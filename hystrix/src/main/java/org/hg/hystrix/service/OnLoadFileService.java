@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hg.commons.SixAxis;
 import org.hg.commons.SixAxisType;
 import org.hg.commons.ThreeAxis;
+import org.hg.commons.ThreeAxisType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,7 +37,7 @@ public class OnLoadFileService {
     @Autowired
     RestTemplate restTemplate;
 
-    @HystrixCommand(fallbackMethod = "error")
+//    @HystrixCommand(fallbackMethod = "error")
     public boolean batchImport(String fileName, MultipartFile file, String fileType) throws Exception{
         boolean notNull = false;
         System.out.println("Service内的文件名："+fileName);
@@ -64,43 +65,43 @@ public class OnLoadFileService {
 //            SixAxis sixAxis;
             List<SixAxis> sixAxisList = new ArrayList<>();
             //得到所有的行数
-            int sumRow = sheet.getLastRowNum();
-            for (int i=1;i<sumRow/10+1;i++){
-                FutureTask<List<SixAxis>> futureTask =  new FutureTask<List<SixAxis>>(new POIExcelSix(sheet, i, i+1));
-                new Thread(futureTask).start();
-                List<SixAxis> listOneThread = futureTask.get();
-//                System.out.println("这是第 "+i+" 个线程："+Thread.currentThread().getName());
-//                for (SixAxis sixAxis : listOneThread){
-//                    sixAxisList.add(sixAxis);
-//                }
-
-            }
-
-//            for (int r=1;r<=sheet.getLastRowNum();r++){
-//                sixAxis = new SixAxis();
-//                Row row = sheet.getRow(r);
-//                if (row==null)
-//                    continue;
-//                row.getCell(1).setCellType(CellType.STRING);
-//                String num_S = row.getCell(1).getStringCellValue();
-//                row.getCell(2).setCellType(CellType.STRING);
-//                String num_L = row.getCell(2).getStringCellValue();
-//                row.getCell(3).setCellType(CellType.STRING);
-//                String num_U = row.getCell(3).getStringCellValue();
-//                row.getCell(4).setCellType(CellType.STRING);
-//                String num_R = row.getCell(4).getStringCellValue();
-//                row.getCell(5).setCellType(CellType.STRING);
-//                String num_B = row.getCell(5).getStringCellValue();
-//                row.getCell(6).setCellType(CellType.STRING);
-//                String num_T = row.getCell(6).getStringCellValue();
-//                sixAxis.setS(Double.valueOf(num_S));
-//                sixAxis.setL(Double.valueOf(num_L));
-//                sixAxis.setU(Double.valueOf(num_U));
-//                sixAxis.setR(Double.valueOf(num_R));
-//                sixAxis.setB(Double.valueOf(num_B));
-//                sixAxis.setT(Double.valueOf(num_T));
-//                sixAxisList.add(sixAxis);
+//            int sumRow = sheet.getLastRowNum();
+//            for (int i=1;i<sumRow/10+1;i++){
+//                FutureTask<List<SixAxis>> futureTask =  new FutureTask<List<SixAxis>>(new POIExcelSix(sheet, i, i+1));
+//                new Thread(futureTask).start();
+//                List<SixAxis> listOneThread = futureTask.get();
+////                System.out.println("这是第 "+i+" 个线程："+Thread.currentThread().getName());
+////                for (SixAxis sixAxis : listOneThread){
+////                    sixAxisList.add(sixAxis);
+////                }
+//
 //            }
+
+            for (int r=1;r<=sheet.getLastRowNum();r++){
+                SixAxis sixAxis = new SixAxis();
+                Row row = sheet.getRow(r);
+                if (row==null)
+                    continue;
+                row.getCell(1).setCellType(CellType.STRING);
+                String num_S = row.getCell(1).getStringCellValue();
+                row.getCell(2).setCellType(CellType.STRING);
+                String num_L = row.getCell(2).getStringCellValue();
+                row.getCell(3).setCellType(CellType.STRING);
+                String num_U = row.getCell(3).getStringCellValue();
+                row.getCell(4).setCellType(CellType.STRING);
+                String num_R = row.getCell(4).getStringCellValue();
+                row.getCell(5).setCellType(CellType.STRING);
+                String num_B = row.getCell(5).getStringCellValue();
+                row.getCell(6).setCellType(CellType.STRING);
+                String num_T = row.getCell(6).getStringCellValue();
+                sixAxis.setS(Double.valueOf(num_S));
+                sixAxis.setL(Double.valueOf(num_L));
+                sixAxis.setU(Double.valueOf(num_U));
+                sixAxis.setR(Double.valueOf(num_R));
+                sixAxis.setB(Double.valueOf(num_B));
+                sixAxis.setT(Double.valueOf(num_T));
+                sixAxisList.add(sixAxis);
+            }
             System.out.println("开始存入数据库……");
             for (SixAxis numOfAxis : sixAxisList){
                 //postForObject 不能传递多个参数，所以使用 map 来保存一下。
@@ -141,9 +142,11 @@ public class OnLoadFileService {
                 threeAxisList.add(threeAxis);
             }
             System.out.println("开始存入数据库……");
+            System.out.println(threeAxisList.size());
             for (ThreeAxis numOfAxis : threeAxisList){
-                System.out.println(numOfAxis.toString());
-                restTemplate.postForLocation("http://providerPlan/onLoadThreeAxis", numOfAxis, fileType, boolean.class);
+                ThreeAxisType threeAxisType = new ThreeAxisType(fileType, numOfAxis);
+                System.out.println("三轴数据："+threeAxisType.toString());
+                restTemplate.postForLocation("http://providerPlan/onLoadThreeAxis", threeAxisType, String.class);
 //                onLoadFileMapper.addThreeAxis(numOfAxis, fileType);
             }
             System.out.println("数据已全部存入数据库中");

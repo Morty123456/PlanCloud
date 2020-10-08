@@ -2,12 +2,12 @@ package org.hg.commons;
 
 public class SixAxis {
     private int id;
-    private double S;
-    private double L;
-    private double U;
-    private double R;
-    private double B;
-    private double T;
+    private double s;
+    private double l;
+    private double u;
+    private double r;
+    private double b;
+    private double t;
 
     public int getId() {
         return id;
@@ -18,63 +18,52 @@ public class SixAxis {
     }
 
     public double getS() {
-        return S;
+        return s;
     }
 
     public void setS(double s) {
-        S = s;
+        this.s = s;
     }
 
     public double getL() {
-        return L;
+        return l;
     }
 
     public void setL(double l) {
-        L = l;
+        this.l = l;
     }
 
     public double getU() {
-        return U;
+        return u;
     }
 
     public void setU(double u) {
-        U = u;
+        this.u = u;
     }
 
     public double getR() {
-        return R;
+        return r;
     }
 
     public void setR(double r) {
-        R = r;
+        this.r = r;
     }
 
     public double getB() {
-        return B;
+        return b;
     }
 
     public void setB(double b) {
-        B = b;
+        this.b = b;
     }
 
     public double getT() {
-        return T;
+        return t;
     }
 
     public void setT(double t) {
-        T = t;
+        this.t = t;
     }
 
-    @Override
-    public String toString() {
-        return "SixAxis{" +
-                "id=" + id +
-                ", S=" + S +
-                ", L=" + L +
-                ", U=" + U +
-                ", R=" + R +
-                ", B=" + B +
-                ", T=" + T +
-                '}';
-    }
+
 }

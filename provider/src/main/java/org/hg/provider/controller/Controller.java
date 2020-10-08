@@ -3,6 +3,7 @@ package org.hg.provider.controller;
 import org.hg.commons.SixAxis;
 import org.hg.commons.SixAxisType;
 import org.hg.commons.ThreeAxis;
+import org.hg.commons.ThreeAxisType;
 import org.hg.provider.mapper.GetRobotNumMapper;
 import org.hg.provider.mapper.LoginMapper;
 import org.hg.provider.mapper.OnLoadFileMapper;
@@ -57,8 +58,9 @@ public class Controller {
         return "ok";
     }
     @PostMapping("/onLoadThreeAxis")
-    public boolean onLoad(@RequestBody ThreeAxis numOfAxis, @RequestBody String fileType){
-        onLoadFileMapper.addThreeAxis(numOfAxis, fileType);
+    public boolean onLoad(@RequestBody ThreeAxisType threeAxisType){
+        System.out.println("provider>>>>>>"+threeAxisType.toString());
+        onLoadFileMapper.addThreeAxis(threeAxisType.getNumOfAxis(), threeAxisType.getFileType());
         return true;
     }
 }

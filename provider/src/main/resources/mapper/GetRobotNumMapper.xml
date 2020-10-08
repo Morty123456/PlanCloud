@@ -3,10 +3,14 @@
 <!--要注意namespace的路径-->
 <mapper namespace="org.hg.provider.mapper.GetRobotNumMapper">
     <!-- id 要和上一个路径中的 mapper 的方法一样， resultType是返回值的类型 -->
+<!--    <select id="getRobotNum" resultType="double">-->
+<!--        select ${axis} from (-->
+<!--            select id, ${axis} from ${numType} order by id desc limit 10-->
+<!--        )-->
+<!--        aa order by id-->
+<!--    </select>-->
+    <!--hive查询-->
     <select id="getRobotNum" resultType="double">
-        select ${axis} from (
-            select id, ${axis} from ${numType} order by id desc limit 10
-        )
-        aa order by id
+        select ${axis} from ${numType} limit 10
     </select>
 </mapper>

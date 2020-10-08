@@ -26,11 +26,11 @@ public class GetRobotNumService {
      * 在方法上添加 @HystrixCommand 注解，配置 fallbackMethod 属性
      * 这个属性表示该方法调用失败时的替代方法
      */
-    @HystrixCommand(fallbackMethod = "error")
+//    @HystrixCommand(fallbackMethod = "error")
     public List<List<Double>> getRobotNum(String numType){
         List<List<Double>> robotnum = new LinkedList<>();
-        String[] axisMore = {"S","L","U","R","B","T"};
-        String[] axisLess = {"R", "B", "T"};
+        String[] axisMore = {"s","l","u","r","b","t"};
+        String[] axisLess = {"r", "b", "t"};
         if (numType.equals("rangeOfMotion") || numType.equals("maximumSpeed")){
             for (String axis : axisMore){
                 //double 数组容易传递，再转为 list
